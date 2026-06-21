@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import { 
-    registerUser, 
-    loginUser,
+import {
+  getCurrentUser,
+  loginUser,
+  registerUser,
 } from "../services/auth.service";
 
 export const register = async (
@@ -40,8 +41,33 @@ export const login = async (
       password
     );
 
-    res.status(200).json({ token });    
-    } catch (error) {
+    res.status(200).json({ token });
+  } catch (error) {
+    res.status(400).json({
+      message:
+        error instanceof Error
+          ? error.message
+          : "Something went wrong",
+    });
+  }
+};
+
+export const me = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    if (!req.user) {
+      res.status(401).json({
+        message: "Unauthorized",
+      });
+      return;
+    }
+
+    const user = await getCurrentUser(req.user.userId);
+
+    res.status(200).json(user);
+  } catch (error) {
     res.status(400).json({
       message:
         error instanceof Error

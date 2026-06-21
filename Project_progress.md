@@ -59,6 +59,7 @@ relatio_db
 Tables:
 
 * [x] User
+* [x] Lead
 * [x] _prisma_migrations
 
 Current User Schema:
@@ -71,6 +72,8 @@ model User {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  leads     Lead[]
 }
 ```
 
@@ -181,10 +184,10 @@ src/
 
 Status:
 
-* [ ] Create auth.middleware.ts
-* [ ] Verify JWT
-* [ ] Attach User To Request
-* [ ] Protected Routes
+* [x] Create auth.middleware.ts
+* [x] Verify JWT
+* [x] Attach User To Request
+* [x] Protected Routes
 
 ---
 
@@ -196,8 +199,8 @@ GET /api/auth/me
 
 Status:
 
-* [ ] Development
-* [ ] Testing
+* [x] Development
+* [x] Testing
 
 Purpose:
 
@@ -216,9 +219,12 @@ model Lead {
   email     String?
   phone     String?
   company   String?
-  status    String
+  status    String   @default("new")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  userId    Int?
+  user      User?    @relation(fields: [userId], references: [id])
 }
 ```
 
@@ -226,11 +232,13 @@ model Lead {
 
 ### Features
 
-* [ ] Create Lead
-* [ ] Get Leads
-* [ ] Get Lead By ID
-* [ ] Update Lead
-* [ ] Delete Lead
+* [x] Create Lead
+* [x] Get Leads
+* [x] Get Lead By ID
+* [x] Update Lead
+* [x] Delete Lead
+* [x] Protect Lead Routes With JWT
+* [x] Filter Leads By Logged In User
 
 Endpoints:
 

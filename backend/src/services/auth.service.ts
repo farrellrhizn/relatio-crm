@@ -1,7 +1,21 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-import { findByEmail, createUser } from "../repositories/user.repository";
+import {
+  createUser,
+  findByEmail,
+  findById,
+} from "../repositories/user.repository";
+
+const toPublicUser = (user: {
+  id: number;
+  name: string;
+  email: string;
+}) => ({
+  id: user.id,
+  name: user.name,
+  email: user.email,
+});
 
 export const registerUser = async (
   name: string,
@@ -16,7 +30,9 @@ export const registerUser = async (
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  return createUser(name, email, hashedPassword);
+  const user = await createUser(name, email, hashedPassword);
+
+  return toPublicUser(user);
 };
 
 export const loginUser = async (
@@ -51,10 +67,16 @@ export const loginUser = async (
 
   return {
     token,
-    user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-    },
+    user: toPublicUser(user),
   };
+};
+
+export const getCurrentUser = async (userId: number) => {
+  const user = await findById(userId);
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  return toPublicUser(user);
 };
