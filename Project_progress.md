@@ -60,6 +60,7 @@ Tables:
 
 * [x] User
 * [x] Lead
+* [x] Customer
 * [x] _prisma_migrations
 
 Current User Schema:
@@ -74,6 +75,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   leads     Lead[]
+  customers Customer[]
 }
 ```
 
@@ -254,10 +256,21 @@ DELETE /api/leads/:id
 
 Features:
 
-* [ ] Create Customer
-* [ ] Update Customer
-* [ ] Delete Customer
-* [ ] Customer Detail
+* [x] Create Customer
+* [x] Get Customers
+* [x] Customer Detail
+* [x] Update Customer
+* [x] Delete Customer
+* [x] Protect Customer Routes With JWT
+* [x] Filter Customers By Logged In User
+
+Endpoints:
+
+POST /api/customers
+GET /api/customers
+GET /api/customers/:id
+PUT /api/customers/:id
+DELETE /api/customers/:id
 
 ---
 
@@ -345,18 +358,18 @@ Features:
 
 # Current Completion
 
-Backend Foundation : 40%
+Backend Foundation : 65%
 
-Authentication : 70%
+Authentication : 90%
 
-CRM Features : 0%
+CRM Features : 35%
 
 Frontend : 0%
 
-Overall Project : 20%
+Overall Project : 35%
 
 ---
 
 Last Updated:
 
-2026-06-18
+2026-06-22
