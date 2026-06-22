@@ -278,10 +278,10 @@ DELETE /api/customers/:id
 
 Features:
 
-* [ ] Notes
-* [ ] Follow Up
-* [ ] Call Logs
-* [ ] Meeting Logs
+* [x] Notes
+* [x] Follow Up
+* [x] Call Logs
+* [x] Meeting Logs
 
 ---
 
@@ -362,11 +362,11 @@ Backend Foundation : 65%
 
 Authentication : 90%
 
-CRM Features : 35%
+CRM Features : 60%
 
 Frontend : 0%
 
-Overall Project : 35%
+Overall Project : 45%
 
 ---
 

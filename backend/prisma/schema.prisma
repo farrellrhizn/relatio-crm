@@ -22,6 +22,7 @@ model User {
 
   leads     Lead[]
   customers Customer[]
+  activities Activity[]
 }
 
 model Lead {
@@ -36,6 +37,7 @@ model Lead {
 
   userId    Int?
   user      User?    @relation(fields: [userId], references: [id])
+  activities Activity[]
 }
 
 model Customer {
@@ -49,4 +51,22 @@ model Customer {
 
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
+  activities Activity[]
+}
+
+model Activity {
+  id        Int      @id @default(autoincrement())
+  type      String   // e.g., "note", "call", "meeting", "follow-up"
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+
+  leadId    Int?
+  lead      Lead?    @relation(fields: [leadId], references: [id])
+
+  customerId Int?
+  customer  Customer? @relation(fields: [customerId], references: [id])
 }
