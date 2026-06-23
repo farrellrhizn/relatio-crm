@@ -296,63 +296,86 @@ Features:
 
 ---
 
-## Sprint 7 - Frontend React
+## Sprint 7 - Frontend Foundation & Layout
 
-### Setup
+### Basic Setup
+* [x] Vite, React, TypeScript Setup
+* [x] Tailwind CSS v4 Configuration
+* [x] React Router & Axios Setup
+* [ ] Install UI Libraries (Lucide React, React Hook Form, Zod, Recharts, TanStack Table)
 
-* [ ] Vite
-* [ ] React
-* [ ] TypeScript
-* [ ] Tailwind CSS
-* [ ] React Router
-* [ ] Axios
+### Theme & Layout (Dark Mode Primary)
+* [ ] Setup Core CSS Variables (Background: #09090B, Accent: #6366F1)
+* [ ] Create Shared UI Components (Button, Input, Card, Badge)
+* [ ] Sidebar Navigation (Collapsible)
+* [ ] Top Navigation Bar (Search, Profile)
+* [ ] Main Layout System
 
 ---
 
-### Pages
+## Sprint 8 - Authentication UI
 
-#### Authentication
+* [ ] Auth State Management Setup (Zustand or Context)
+* [ ] Login Page UI (Modern SaaS Style)
+* [ ] Integrate Login API & Token Storage
+* [ ] Axios Interceptors Implementation
+* [ ] Protected Routes Logic
 
-* [ ] Login Page
+---
 
-#### Dashboard
+## Sprint 9 - CRM Core UI (Leads & Customers)
 
-* [ ] Dashboard Overview
+### Leads Management
+* [ ] Leads Table View (TanStack Table)
+* [ ] Create/Edit Lead Modal or Page (React Hook Form + Zod)
+* [ ] Integrate Lead API (CRUD)
+* [ ] Status Badges UI
 
-#### Leads
+### Customers (Contacts) Management
+* [ ] Customers Table View
+* [ ] Customer Detail Page 
+* [ ] Integrate Customer API (CRUD)
 
-* [ ] Lead List
-* [ ] Create Lead
-* [ ] Edit Lead
+---
 
-#### Customers
+## Sprint 10 - Dashboard & Activities UI
 
-* [ ] Customer List
-* [ ] Customer Detail
+### Bento Dashboard Overview
+* [ ] KPI Cards Component (Total Leads, Customers, Conversion)
+* [ ] Integrasi Dashboard API
+* [ ] Revenue/Pipeline Chart (Recharts) Placeholder
+
+### Activities Tracking
+* [ ] Activity Timeline Component
+* [ ] Add Activity UI (Notes, Calls, Follow-ups)
+* [ ] Integrate Activity API
 
 ---
 
 # Future Improvements
 
-## Backend
+## Backend Ecosystem (API for New UI)
 
-* [ ] Zod Validation
-* [ ] Global Error Handler
-* [ ] Logger
-* [ ] Refresh Token
-* [ ] Role Permission
-* [ ] Pagination
-* [ ] Filtering
-* [ ] Search
+* [ ] Zod Validation & Global Error Handler
+* [ ] Logger & Refresh Token
+* [ ] Role Permission (Team Management)
+* [ ] Pagination, Filtering, Search
+* [ ] Opportunities & Pipeline Module
+* [ ] Companies Module
+* [ ] Proposals Module
+* [ ] Tasks Management
 
 ---
 
-## Frontend
+## Frontend Architecture
 
-* [ ] TanStack Query
-* [ ] React Hook Form
-* [ ] Zustand
-* [ ] Dark Mode
+* [ ] TanStack Query (Data Fetching)
+* [ ] React Hook Form & Zod (Form Validation)
+* [ ] Zustand (State Management)
+* [ ] Dark Mode Implementation (Primary Theme)
+* [ ] Recharts (Revenue & Pipeline Analytics)
+* [ ] TanStack Table (Data Grids)
+* [ ] Lucide React (Icons)
 
 ---
 
