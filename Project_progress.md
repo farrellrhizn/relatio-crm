@@ -289,10 +289,10 @@ Features:
 
 Features:
 
-* [ ] Total Leads
-* [ ] Total Customers
-* [ ] Conversion Rate
-* [ ] Recent Activities
+* [x] Total Leads
+* [x] Total Customers
+* [x] Conversion Rate
+* [x] Recent Activities
 
 ---
 
@@ -362,11 +362,11 @@ Backend Foundation : 65%
 
 Authentication : 90%
 
-CRM Features : 60%
+CRM Features : 100%
 
 Frontend : 0%
 
-Overall Project : 45%
+Overall Project : 65%
 
 ---
 
