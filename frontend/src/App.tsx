@@ -1,17 +1,33 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+
+import AuthLayout from "./layouts/AuthLayout";
+import AppLayout from "./layouts/AppLayout";
+import LoginPage from "./pages/auth/LoginPage";
+import DashboardPage from "./pages/dashboard/DashboardPage";
+import LeadsPage from "./pages/leads/LeadsPage";
+import CustomersPage from "./pages/customers/CustomersPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<div className="p-10 text-2xl font-bold">Ini Halaman Login</div>} />
-        <Route path="/dashboard" element={<div className="p-10 text-2xl font-bold">Ini Halaman Dashboard</div>} />
-        
-        {/* Redirect dari root ke dashboard */}
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        
-        {/* Halaman 404 sederhana */}
-        <Route path="*" element={<div className="p-10 text-red-500">404 - Halaman Tidak Ditemukan</div>} />
+        {/* Default: redirect to login */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
+
+        {/* Auth routes */}
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<LoginPage />} />
+        </Route>
+
+        {/* Protected app routes */}
+        <Route element={<AppLayout />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/leads" element={<LeadsPage />} />
+          <Route path="/customers" element={<CustomersPage />} />
+        </Route>
+
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );
