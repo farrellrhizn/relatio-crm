@@ -1,11 +1,10 @@
 import axios from "axios";
 
-// Ganti port 3000 dengan port backend Anda jika berbeda
 const api = axios.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL: "http://localhost:5000/api",
 });
 
-// Menambahkan token JWT otomatis ke setiap request
+// Automatically add JWT token to every request
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
@@ -13,5 +12,18 @@ api.interceptors.request.use((config) => {
   }
   return config;
 });
+
+// Response interceptor to handle errors (like 401 Unauthorized)
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      // Clear token and reload or trigger logout in authStore
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default api;

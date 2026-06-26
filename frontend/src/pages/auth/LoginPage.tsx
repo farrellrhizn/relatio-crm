@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./LoginPage.css";
 import { Eye, EyeOff, ArrowRight, Loader2 } from "lucide-react";
+import api from "../../services/api";
+import { useAuthStore } from "../../store/authStore";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -11,20 +13,35 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const { login: storeLogin } = useAuthStore();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
 
     try {
-      // TODO: Integrate with backend API POST /api/auth/login
-      // Simulate login for now
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      // 1. Authenticate with email/password
+      const response = await api.post("/auth/login", { email, password });
+      const { token } = response.data;
 
-      // On success, navigate to dashboard
+      // Save token temporarily so subsequent API calls use it in authorization headers
+      localStorage.setItem("token", token);
+
+      // 2. Fetch authenticated user details
+      const userResponse = await api.get("/auth/me");
+      const user = userResponse.data;
+
+      // 3. Save to Zustand store
+      storeLogin(token, user);
+
+      // 4. Navigate to dashboard
       navigate("/dashboard");
-    } catch {
-      setError("Invalid email or password. Please try again.");
+    } catch (err: any) {
+      localStorage.removeItem("token");
+      setError(
+        err.response?.data?.message || "Invalid email or password. Please try again."
+      );
     } finally {
       setIsLoading(false);
     }
