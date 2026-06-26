@@ -9,6 +9,8 @@ import LoginPage from "./pages/auth/LoginPage";
 import DashboardPage from "./pages/dashboard/DashboardPage";
 import LeadsPage from "./pages/leads/LeadsPage";
 import CustomersPage from "./pages/customers/CustomersPage";
+import ActivitiesPage from "./pages/activities/ActivitiesPage";
+import SettingsPage from "./pages/settings/SettingsPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ProtectedRoute from "./components/shared/ProtectedRoute";
 
@@ -69,6 +71,8 @@ function App() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/leads" element={<LeadsPage />} />
           <Route path="/customers" element={<CustomersPage />} />
+          <Route path="/activities" element={<ActivitiesPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
         </Route>
 
         <Route path="*" element={<NotFoundPage />} />
