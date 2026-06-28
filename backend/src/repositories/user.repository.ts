@@ -29,3 +29,10 @@ export const createUser = async (
     },
   });
 };
+
+export const updatePassword = async (id: number, password: string) => {
+  return prisma.user.update({
+    where: { id },
+    data: { password },
+  });
+};

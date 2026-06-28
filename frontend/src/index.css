@@ -1,7 +1,31 @@
 @import "tailwindcss";
 
 :root {
-  /* Colors — from Frontend_style.md */
+  /* Colors — Light Theme (Default / fallback variables if class is missing) */
+  --background: #f4f4f5;
+  --sidebar: #fafafa;
+  --surface: #ffffff;
+  --border: rgba(9, 9, 11, 0.08);
+
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --secondary: #8b5cf6;
+
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+
+  --text-primary: #09090b;
+  --text-secondary: #71717a;
+
+  /* Radius */
+  --radius-card: 16px;
+  --radius-input: 12px;
+  --radius-button: 12px;
+}
+
+html.dark {
+  /* Colors — Dark Theme */
   --background: #09090b;
   --sidebar: #111113;
   --surface: #18181b;
@@ -17,11 +41,6 @@
 
   --text-primary: #fafafa;
   --text-secondary: #a1a1aa;
-
-  /* Radius */
-  --radius-card: 16px;
-  --radius-input: 12px;
-  --radius-button: 12px;
 }
 
 body {
