@@ -52,6 +52,55 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary) !important;
+}
+
+table thead tr {
+  color: var(--text-secondary) !important;
+  border-bottom-color: var(--border) !important;
+}
+
+table tbody tr td {
+  color: var(--text-primary) !important;
+}
+
+.text-white {
+  color: var(--text-primary) !important;
+}
+
+.bg-white\/5 {
+  background-color: var(--border) !important;
+}
+
+.bg-white\/3 {
+  background-color: var(--border) !important;
+}
+
+.bg-white\/1:hover {
+  background-color: var(--border) !important;
+}
+
+.border-white\/10 {
+  border-color: var(--border) !important;
+}
+
+.border-white\/8 {
+  border-color: var(--border) !important;
+}
+
+.border-white\/5 {
+  border-color: var(--border) !important;
+}
+
+.text-zinc-300 {
+  color: var(--text-primary) !important;
+}
+
+.text-zinc-400 {
+  color: var(--text-secondary) !important;
+}
+
 /* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 6px;
