@@ -72,7 +72,7 @@ export default function CompaniesPage() {
           <h1 className="text-2xl font-semibold tracking-tight text-white">Companies</h1>
           <p className="text-sm text-zinc-400">Manage client organizations and key details.</p>
         </div>
-        <Button variant="primary" leftIcon={<Plus className="h-4 w-4" />} onClick={handleOpenAddModal}>
+        <Button variant="primary" className="text-white!" leftIcon={<Plus className="h-4 w-4" />} onClick={handleOpenAddModal}>
           Add Company
         </Button>
       </div>

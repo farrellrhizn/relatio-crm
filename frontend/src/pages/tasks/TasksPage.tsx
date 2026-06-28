@@ -90,7 +90,7 @@ export default function TasksPage() {
           <h1 className="text-2xl font-semibold tracking-tight text-white">Tasks</h1>
           <p className="text-sm text-zinc-400">Track and manage your sales tasks and follow-ups.</p>
         </div>
-        <Button variant="primary" leftIcon={<Plus className="h-4 w-4" />} onClick={handleOpenAddModal}>
+        <Button variant="primary" className="text-white!" leftIcon={<Plus className="h-4 w-4" />} onClick={handleOpenAddModal}>
           Add Task
         </Button>
       </div>

@@ -86,7 +86,7 @@ export default function ProposalsPage() {
           <h1 className="text-2xl font-semibold tracking-tight text-white">Proposals</h1>
           <p className="text-sm text-zinc-400">Manage your business proposals and quotes sent to prospects.</p>
         </div>
-        <Button variant="primary" leftIcon={<Plus className="h-4 w-4" />} onClick={handleOpenAddModal}>
+        <Button variant="primary" className="text-white!" leftIcon={<Plus className="h-4 w-4" />} onClick={handleOpenAddModal}>
           Add Proposal
         </Button>
       </div>

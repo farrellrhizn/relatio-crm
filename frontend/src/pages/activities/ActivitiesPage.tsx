@@ -108,6 +108,7 @@ export default function ActivitiesPage() {
         </div>
         <Button
           variant="primary"
+          className="text-white!"
           leftIcon={<Plus className="h-4 w-4" />}
           onClick={() => setIsModalOpen(true)}
         >

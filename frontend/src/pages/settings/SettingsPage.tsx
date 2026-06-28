@@ -169,7 +169,7 @@ export default function SettingsPage() {
                   {...register("confirmPassword", { required: "Please confirm your password" })}
                 />
                 <div className="flex justify-end pt-2">
-                  <Button type="submit" variant="primary" isLoading={isSubmitting}>
+                  <Button type="submit" variant="primary" className="text-white!" isLoading={isSubmitting}>
                     Update Password
                   </Button>
                 </div>

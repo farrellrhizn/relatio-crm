@@ -70,7 +70,7 @@ export default function OpportunitiesPage() {
           <h1 className="text-2xl font-semibold tracking-tight text-white">Opportunities & Sales Pipeline</h1>
           <p className="text-sm text-zinc-400">Track pipeline stages, values, and close dates for deals.</p>
         </div>
-        <Button variant="primary" leftIcon={<Plus className="h-4 w-4" />} onClick={handleOpenAddModal}>
+        <Button variant="primary" className="text-white!" leftIcon={<Plus className="h-4 w-4" />} onClick={handleOpenAddModal}>
           Add Opportunity
         </Button>
       </div>

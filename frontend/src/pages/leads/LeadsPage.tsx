@@ -86,6 +86,7 @@ export default function LeadsPage() {
         </div>
         <Button
           variant="primary"
+          className="text-white!"
           leftIcon={<Plus className="h-4 w-4" />}
           onClick={handleOpenAddModal}
         >
