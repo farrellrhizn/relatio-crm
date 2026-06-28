@@ -218,7 +218,7 @@ export default function DashboardPage() {
                           </span>
                         </div>
                         <div className="flex-1 min-w-0 pt-1.5">
-                          <p className="text-xs font-semibold text-zinc-200">
+                          <p className="text-xs font-semibold text-(--text-primary)">
                             {activity.content}
                           </p>
                           <p className="text-[10px] text-zinc-500 mt-0.5 flex items-center gap-1.5">
