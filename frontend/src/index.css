@@ -1,7 +1,19 @@
 @import "tailwindcss";
 
+@theme {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-sidebar: var(--sidebar);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-secondary: var(--secondary);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+}
+
 :root {
-  /* Colors — Light Theme (Default / fallback variables if class is missing) */
+  /* Colors — Light Theme */
   --background: #f4f4f5;
   --sidebar: #fafafa;
   --surface: #ffffff;
@@ -52,54 +64,34 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6,
+.text-white,
+.text-zinc-200,
+.text-zinc-300,
+.font-semibold.text-white,
+.font-semibold {
   color: var(--text-primary) !important;
 }
 
-table thead tr {
+.text-zinc-400,
+.text-zinc-500,
+.placeholder\:text-zinc-500 {
   color: var(--text-secondary) !important;
-  border-bottom-color: var(--border) !important;
 }
 
-table tbody tr td {
-  color: var(--text-primary) !important;
-}
-
-.text-white {
-  color: var(--text-primary) !important;
-}
-
-.bg-white\/5 {
-  background-color: var(--border) !important;
-}
-
-.bg-white\/3 {
-  background-color: var(--border) !important;
-}
-
-.bg-white\/1:hover {
-  background-color: var(--border) !important;
-}
-
+.border-white\/5,
+.border-white\/8,
 .border-white\/10 {
   border-color: var(--border) !important;
 }
 
-.border-white\/8 {
-  border-color: var(--border) !important;
+.bg-white\/1:hover,
+.bg-white\/3,
+.bg-white\/5 {
+  background-color: var(--border) !important;
 }
 
-.border-white\/5 {
-  border-color: var(--border) !important;
-}
-
-.text-zinc-300 {
-  color: var(--text-primary) !important;
-}
-
-.text-zinc-400 {
-  color: var(--text-secondary) !important;
-}
+/* Scrollbar styling */
 
 /* Scrollbar styling */
 ::-webkit-scrollbar {
