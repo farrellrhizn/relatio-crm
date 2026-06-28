@@ -5,9 +5,9 @@ export default function Topbar() {
   const { theme, toggleTheme } = useThemeStore();
 
   return (
-    <header className="sticky top-0 z-20 border-b border-white/10 bg-(--background)/90 backdrop-blur">
+    <header className="sticky top-0 z-20 border-b border-(--border) bg-(--background)/90 backdrop-blur">
       <div className="flex h-16 items-center gap-4 px-4 md:px-6 lg:px-8">
-        <div className="flex flex-1 items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5">
+        <div className="flex flex-1 items-center gap-3 rounded-2xl border border-(--border) bg-black/3 dark:bg-white/5 px-4 py-2.5">
           <Search className="h-4 w-4 text-zinc-400" />
           <input
             type="text"
@@ -19,7 +19,7 @@ export default function Topbar() {
         <button
           type="button"
           onClick={toggleTheme}
-          className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-zinc-300 transition-colors hover:bg-white/10 hover:text-white"
+          className="flex h-11 w-11 items-center justify-center rounded-2xl border border-(--border) bg-black/3 dark:bg-white/5 text-(--text-secondary) transition-colors hover:bg-black/5 dark:hover:bg-white/10 hover:text-(--text-primary)"
           title="Toggle Theme"
         >
           {theme === "dark" ? (
@@ -31,7 +31,7 @@ export default function Topbar() {
 
         <button
           type="button"
-          className="relative flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-zinc-300 transition-colors hover:bg-white/10 hover:text-white"
+          className="relative flex h-11 w-11 items-center justify-center rounded-2xl border border-(--border) bg-black/3 dark:bg-white/5 text-(--text-secondary) transition-colors hover:bg-black/5 dark:hover:bg-white/10 hover:text-(--text-primary)"
         >
           <Bell className="h-4 w-4" />
           <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-(--primary)" />
@@ -39,13 +39,13 @@ export default function Topbar() {
 
         <button
           type="button"
-          className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-3 py-2 transition-colors hover:bg-white/10"
+          className="flex items-center gap-3 rounded-2xl border border-(--border) bg-black/3 dark:bg-white/5 px-3 py-2 transition-colors hover:bg-black/5 dark:hover:bg-white/10"
         >
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-(--primary) text-xs font-semibold text-white">
             A
           </div>
           <div className="hidden text-left sm:block">
-            <p className="text-sm font-medium text-white">Admin</p>
+            <p className="text-sm font-medium text-(--text-primary)">Admin</p>
             <p className="text-xs text-zinc-400">Super Admin</p>
           </div>
         </button>
