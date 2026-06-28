@@ -73,6 +73,21 @@ h1, h2, h3, h4, h5, h6,
   color: var(--text-primary) !important;
 }
 
+.bg-\[\#18181B\] {
+  background-color: var(--surface) !important;
+}
+
+select option {
+  background-color: var(--surface) !important;
+  color: var(--text-primary) !important;
+}
+
+select {
+  background-color: var(--surface) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border) !important;
+}
+
 .text-zinc-400,
 .text-zinc-500,
 .placeholder\:text-zinc-500 {
