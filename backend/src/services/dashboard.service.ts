@@ -58,3 +58,88 @@ export const getDashboardMetrics = async (userId: number) => {
     recentActivities,
   };
 };
+
+export const searchGlobalMetrics = async (userId: number, query: string) => {
+  if (!query) return [];
+
+  const [leads, customers, companies, opportunities, proposals] = await Promise.all([
+    prisma.lead.findMany({
+      where: { userId, name: { contains: query, mode: "insensitive" } },
+      take: 3,
+      select: { id: true, name: true, company: true },
+    }),
+    prisma.customer.findMany({
+      where: { userId, name: { contains: query, mode: "insensitive" } },
+      take: 3,
+      select: { id: true, name: true, company: true },
+    }),
+    prisma.company.findMany({
+      where: { userId, name: { contains: query, mode: "insensitive" } },
+      take: 3,
+      select: { id: true, name: true, domain: true },
+    }),
+    prisma.opportunity.findMany({
+      where: { userId, title: { contains: query, mode: "insensitive" } },
+      take: 3,
+      select: { id: true, title: true, stage: true },
+    }),
+    prisma.proposal.findMany({
+      where: { userId, title: { contains: query, mode: "insensitive" } },
+      take: 3,
+      select: { id: true, title: true, status: true },
+    }),
+  ]);
+
+  const results: any[] = [];
+  leads.forEach((l) => results.push({ id: l.id, type: "lead", title: l.name, subtitle: l.company }));
+  customers.forEach((c) => results.push({ id: c.id, type: "customer", title: c.name, subtitle: c.company }));
+  companies.forEach((co) => results.push({ id: co.id, type: "company", title: co.name, subtitle: co.domain }));
+  opportunities.forEach((o) => results.push({ id: o.id, type: "opportunity", title: o.title, subtitle: o.stage }));
+  proposals.forEach((p) => results.push({ id: p.id, type: "proposal", title: p.title, subtitle: p.status }));
+
+  return results;
+};
+
+export const getNotificationsMetrics = async (userId: number) => {
+  // Generate helpful dummy tasks or opportunities closing soon as notifications in a robust way
+  const upcomingTasks = await prisma.task.findMany({
+    where: { userId, status: { not: "completed" } },
+    orderBy: { dueDate: "asc" },
+    take: 5,
+  });
+
+  const soonClosingOpps = await prisma.opportunity.findMany({
+    where: { userId, stage: { notIn: ["won", "lost"] } },
+    orderBy: { closeDate: "asc" },
+    take: 5,
+  });
+
+  const notifications: any[] = [];
+
+  upcomingTasks.forEach((t) => {
+    notifications.push({
+      id: t.id,
+      title: `Task Due Soon: ${t.title}`,
+      description: t.description || `This task is flagged as ${t.priority} priority.`,
+      read: false,
+      createdAt: t.createdAt.toISOString(),
+    });
+  });
+
+  soonClosingOpps.forEach((o) => {
+    notifications.push({
+      id: o.id + 1000, // avoid id collision
+      title: `Opportunity Close Target: ${o.title}`,
+      description: `Target closing date soon at stage: ${o.stage}. Value: $${o.value.toLocaleString()}`,
+      read: false,
+      createdAt: o.createdAt.toISOString(),
+    });
+  });
+
+  return notifications;
+};
+
+export const readNotificationsMetrics = async (userId: number) => {
+  // Soft operation, since system notifications are dynamically computed from tasks & opportunities.
+  return { success: true };
+};
