@@ -7,15 +7,51 @@ export const createLead = async (data: Prisma.LeadUncheckedCreateInput) => {
   });
 };
 
-export const findAllLeads = async (userId: number) => {
-  return prisma.lead.findMany({
-    where: {
-      userId,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+export const findAllLeads = async (
+  userId: number,
+  params: {
+    skip?: number;
+    take?: number;
+    search?: string;
+    status?: string;
+  } = {}
+) => {
+  const { skip, take, search, status } = params;
+
+  const whereClause: Prisma.LeadWhereInput = {
+    userId,
+    ...(status && { status }),
+    ...(search && {
+      OR: [
+        { name: { contains: search, mode: "insensitive" } },
+        { email: { contains: search, mode: "insensitive" } },
+        { company: { contains: search, mode: "insensitive" } },
+      ],
+    }),
+  };
+
+  const [data, total] = await Promise.all([
+    prisma.lead.findMany({
+      where: whereClause,
+      include: {
+        companyRelation: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      ...(skip !== undefined && { skip }),
+      ...(take !== undefined && { take }),
+    }),
+    prisma.lead.count({
+      where: whereClause,
+    }),
+  ]);
+
+  return { data, total };
 };
 
 export const findLeadById = async (
@@ -26,6 +62,9 @@ export const findLeadById = async (
     where: {
       id,
       userId,
+    },
+    include: {
+      companyRelation: true,
     },
   });
 };

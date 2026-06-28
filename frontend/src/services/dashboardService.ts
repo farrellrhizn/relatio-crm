@@ -4,6 +4,9 @@ import type { Activity } from "./activityService";
 export interface DashboardData {
   totalLeads: number;
   totalCustomers: number;
+  totalOpportunities: number;
+  pipelineValue: number;
+  totalRevenue: number;
   conversionRate: string;
   recentActivities: Activity[];
 }

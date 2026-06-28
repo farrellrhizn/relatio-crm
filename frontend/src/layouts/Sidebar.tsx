@@ -4,13 +4,21 @@ import {
   Users,
   UserRound,
   Activity,
+  Building,
+  CheckSquare,
+  TrendingUp,
+  FileText,
   Settings,
 } from "lucide-react";
 
 const navItems = [
   { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
+  { label: "Companies", to: "/companies", icon: Building },
   { label: "Leads", to: "/leads", icon: Users },
+  { label: "Proposals", to: "/proposals", icon: FileText },
+  { label: "Opportunities", to: "/opportunities", icon: TrendingUp },
   { label: "Customers", to: "/customers", icon: UserRound },
+  { label: "Tasks", to: "/tasks", icon: CheckSquare },
   { label: "Activities", to: "/activities", icon: Activity },
   { label: "Settings", to: "/settings", icon: Settings },
 ];

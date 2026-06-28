@@ -44,7 +44,14 @@ export const getLeadsController = async (
       return;
     }
 
-    const leads = await getLeadsService(req.user.userId);
+    const { page, limit, search, status } = req.query;
+
+    const leads = await getLeadsService(req.user.userId, {
+      ...(page && { page: Number(page) }),
+      ...(limit && { limit: Number(limit) }),
+      ...(search && { search: String(search) }),
+      ...(status && { status: String(status) }),
+    });
 
     res.status(200).json(leads);
   } catch (error) {

@@ -12,6 +12,7 @@ type LeadInput = {
   phone?: string | null;
   company?: string | null;
   status?: string;
+  companyId?: number | null;
 };
 
 const cleanLeadInput = (data: Partial<LeadInput>) => {
@@ -21,6 +22,7 @@ const cleanLeadInput = (data: Partial<LeadInput>) => {
     ...(data.phone !== undefined && { phone: data.phone }),
     ...(data.company !== undefined && { company: data.company }),
     ...(data.status !== undefined && { status: data.status }),
+    ...(data.companyId !== undefined && { companyId: data.companyId }),
   };
 };
 
@@ -38,15 +40,46 @@ export const createLeadService = async (
     throw new Error("Name is required");
   }
 
+  const cleaned = cleanLeadInput(data);
+
   return createLead({
     name: data.name,
     userId,
-    ...cleanLeadInput(data),
+    status: cleaned.status ?? "new",
+    email: cleaned.email ?? null,
+    phone: cleaned.phone ?? null,
+    company: cleaned.company ?? null,
+    companyId: cleaned.companyId ?? null,
   });
 };
 
-export const getLeadsService = async (userId: number) => {
-  return findAllLeads(userId);
+export const getLeadsService = async (
+  userId: number,
+  params: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: string;
+  } = {}
+) => {
+  const page = params.page && params.page > 0 ? params.page : 1;
+  const limit = params.limit && params.limit > 0 ? params.limit : 10;
+  const skip = (page - 1) * limit;
+
+  const { data, total } = await findAllLeads(userId, {
+    skip,
+    take: limit,
+    ...(params.search && { search: params.search }),
+    ...(params.status && { status: params.status }),
+  });
+
+  return {
+    data,
+    total,
+    page,
+    limit,
+    totalPages: Math.ceil(total / limit),
+  };
 };
 
 export const getLeadByIdService = async (
@@ -72,7 +105,16 @@ export const updateLeadService = async (
   validateLeadId(id);
   await getLeadByIdService(userId, id);
 
-  return updateLeadById(id, cleanLeadInput(data));
+  const cleaned = cleanLeadInput(data);
+  const updateData: any = {};
+  if (cleaned.name !== undefined) updateData.name = cleaned.name;
+  if (cleaned.email !== undefined) updateData.email = cleaned.email ?? null;
+  if (cleaned.phone !== undefined) updateData.phone = cleaned.phone ?? null;
+  if (cleaned.company !== undefined) updateData.company = cleaned.company ?? null;
+  if (cleaned.status !== undefined) updateData.status = cleaned.status;
+  if (cleaned.companyId !== undefined) updateData.companyId = cleaned.companyId ?? null;
+
+  return updateLeadById(id, updateData);
 };
 
 export const deleteLeadService = async (

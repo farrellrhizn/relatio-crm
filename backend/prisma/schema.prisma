@@ -20,9 +20,13 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  leads     Lead[]
-  customers Customer[]
-  activities Activity[]
+  leads          Lead[]
+  customers      Customer[]
+  activities     Activity[]
+  companies      Company[]
+  tasks          Task[]
+  opportunities  Opportunity[]
+  proposals      Proposal[]
 }
 
 model Lead {
@@ -38,6 +42,11 @@ model Lead {
   userId    Int?
   user      User?    @relation(fields: [userId], references: [id])
   activities Activity[]
+
+  companyId Int?
+  companyRelation Company? @relation(fields: [companyId], references: [id])
+  opportunities Opportunity[]
+  proposals Proposal[]
 }
 
 model Customer {
@@ -52,6 +61,65 @@ model Customer {
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
   activities Activity[]
+
+  companyId Int?
+  companyRelation Company? @relation(fields: [companyId], references: [id])
+  opportunities Opportunity[]
+  proposals Proposal[]
+}
+
+model Company {
+  id        Int      @id @default(autoincrement())
+  name      String
+  domain    String?
+  phone     String?
+  address   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+
+  leads     Lead[]
+  customers Customer[]
+  opportunities Opportunity[]
+  proposals Proposal[]
+}
+
+model Task {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  dueDate     DateTime?
+  status      String   @default("todo") // todo, in_progress, completed
+  priority    String   @default("medium") // low, medium, high
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model Opportunity {
+  id          Int      @id @default(autoincrement())
+  title       String
+  value       Float    @default(0)
+  stage       String   @default("qualification") // qualification, proposal, negotiation, won, lost
+  closeDate   DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+
+  leadId      Int?
+  lead        Lead?    @relation(fields: [leadId], references: [id])
+
+  customerId  Int?
+  customer    Customer? @relation(fields: [customerId], references: [id])
+
+  companyId   Int?
+  company     Company?  @relation(fields: [companyId], references: [id])
 }
 
 model Activity {
@@ -69,4 +137,30 @@ model Activity {
 
   customerId Int?
   customer  Customer? @relation(fields: [customerId], references: [id])
+  proposalId Int?
+  proposal  Proposal?  @relation(fields: [proposalId], references: [id])
+}
+
+model Proposal {
+  id          Int       @id @default(autoincrement())
+  title       String
+  value       Float     @default(0)
+  status      String    @default("draft") // draft, sent, accepted, rejected
+  validUntil  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+
+  leadId      Int?
+  lead        Lead?     @relation(fields: [leadId], references: [id])
+
+  customerId  Int?
+  customer    Customer? @relation(fields: [customerId], references: [id])
+
+  companyId   Int?
+  company     Company?  @relation(fields: [companyId], references: [id])
+
+  activities  Activity[]
 }

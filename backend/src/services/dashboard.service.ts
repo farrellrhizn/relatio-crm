@@ -9,6 +9,23 @@ export const getDashboardMetrics = async (userId: number) => {
     where: { userId },
   });
 
+  const totalOpportunities = await prisma.opportunity.count({
+    where: { userId },
+  });
+
+  const activeOppSum = await prisma.opportunity.aggregate({
+    where: { userId, stage: { notIn: ["won", "lost"] } },
+    _sum: { value: true },
+  });
+
+  const totalRevenueSum = await prisma.opportunity.aggregate({
+    where: { userId, stage: "won" },
+    _sum: { value: true },
+  });
+
+  const pipelineValue = activeOppSum._sum.value || 0;
+  const totalRevenue = totalRevenueSum._sum.value || 0;
+
   // Simple conversion rate calculation
   let conversionRate = 0;
   if (totalLeads > 0) {
@@ -34,6 +51,9 @@ export const getDashboardMetrics = async (userId: number) => {
   return {
     totalLeads,
     totalCustomers,
+    totalOpportunities,
+    pipelineValue,
+    totalRevenue,
     conversionRate: conversionRate.toFixed(2), // returns string with 2 decimal points
     recentActivities,
   };

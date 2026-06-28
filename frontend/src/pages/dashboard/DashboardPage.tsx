@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Users, UserCheck, TrendingUp, Phone, Calendar, FileText, CheckCircle, Activity, ArrowUpRight } from "lucide-react";
+import { Users, UserCheck, Phone, Calendar, FileText, CheckCircle, Activity, ArrowUpRight, DollarSign, Briefcase } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import Card from "../../components/ui/Card";
 import { getDashboardData } from "../../services/dashboardService";
@@ -40,7 +40,7 @@ export default function DashboardPage() {
     );
   }
 
-  const { totalLeads, totalCustomers, conversionRate, recentActivities } = data;
+  const { totalLeads, totalCustomers, totalOpportunities, pipelineValue, totalRevenue, conversionRate, recentActivities } = data;
 
   // Mock trend data based on actual database metrics for visual area chart
   const trendData = [
@@ -77,7 +77,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Row 1: KPI Cards */}
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {/* Total Leads Card */}
         <Card className="p-5 flex items-center justify-between hoverable">
           <div className="space-y-1">
@@ -114,21 +114,31 @@ export default function DashboardPage() {
           </div>
         </Card>
 
-        {/* Conversion Rate Card */}
+        {/* Pipeline Value Card */}
         <Card className="p-5 flex items-center justify-between hoverable">
           <div className="space-y-1">
-            <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500">Conversion Rate</p>
-            <h3 className="text-3xl font-semibold text-white">{conversionRate}%</h3>
-            <p className="text-xs text-zinc-400 flex items-center gap-1 mt-1">
-              <span className="text-emerald-400 font-medium inline-flex items-center gap-0.5">
-                <ArrowUpRight className="h-3 w-3" />
-                4.3%
-              </span>
-              from last week
+            <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500">Pipeline Value</p>
+            <h3 className="text-3xl font-semibold text-white">${pipelineValue.toLocaleString()}</h3>
+            <p className="text-xs text-zinc-500 mt-1">
+              Active deals: {totalOpportunities}
             </p>
           </div>
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-400">
-            <TrendingUp className="h-5 w-5" />
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-500/10 text-indigo-400">
+            <Briefcase className="h-5 w-5" />
+          </div>
+        </Card>
+
+        {/* Total Revenue Card */}
+        <Card className="p-5 flex items-center justify-between hoverable">
+          <div className="space-y-1">
+            <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500">Won Revenue</p>
+            <h3 className="text-3xl font-semibold text-white">${totalRevenue.toLocaleString()}</h3>
+            <p className="text-xs text-zinc-400 flex items-center gap-1 mt-1">
+              Conversion: <span className="text-emerald-400 font-semibold">{conversionRate}%</span>
+            </p>
+          </div>
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-400">
+            <DollarSign className="h-5 w-5" />
           </div>
         </Card>
       </div>

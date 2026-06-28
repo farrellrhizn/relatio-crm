@@ -9,15 +9,49 @@ export const createCustomer = async (
   });
 };
 
-export const findAllCustomers = async (userId: number) => {
-  return prisma.customer.findMany({
-    where: {
-      userId,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+export const findAllCustomers = async (
+  userId: number,
+  params: {
+    skip?: number;
+    take?: number;
+    search?: string;
+  } = {}
+) => {
+  const { skip, take, search } = params;
+
+  const whereClause: Prisma.CustomerWhereInput = {
+    userId,
+    ...(search && {
+      OR: [
+        { name: { contains: search, mode: "insensitive" } },
+        { email: { contains: search, mode: "insensitive" } },
+        { company: { contains: search, mode: "insensitive" } },
+      ],
+    }),
+  };
+
+  const [data, total] = await Promise.all([
+    prisma.customer.findMany({
+      where: whereClause,
+      include: {
+        companyRelation: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      ...(skip !== undefined && { skip }),
+      ...(take !== undefined && { take }),
+    }),
+    prisma.customer.count({
+      where: whereClause,
+    }),
+  ]);
+
+  return { data, total };
 };
 
 export const findCustomerById = async (
@@ -28,6 +62,9 @@ export const findCustomerById = async (
     where: {
       id,
       userId,
+    },
+    include: {
+      companyRelation: true,
     },
   });
 };

@@ -6,6 +6,8 @@ import Input from "../ui/Input";
 import { createLead, updateLead } from "../../services/leadService";
 import type { Lead, LeadInput } from "../../services/leadService";
 import { createCustomer } from "../../services/customerService";
+import { getCompanies } from "../../services/companyService";
+import type { Company } from "../../services/companyService";
 
 interface LeadModalProps {
   isOpen: boolean;
@@ -17,6 +19,7 @@ interface LeadModalProps {
 export default function LeadModal({ isOpen, onClose, onSuccess, lead }: LeadModalProps) {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [companies, setCompanies] = useState<Company[]>([]);
 
   const {
     register,
@@ -29,27 +32,42 @@ export default function LeadModal({ isOpen, onClose, onSuccess, lead }: LeadModa
       email: "",
       phone: "",
       company: "",
+      companyId: null,
       status: "new",
     },
   });
 
   useEffect(() => {
-    if (lead) {
-      reset({
-        name: lead.name,
-        email: lead.email || "",
-        phone: lead.phone || "",
-        company: lead.company || "",
-        status: lead.status || "new",
-      });
-    } else {
-      reset({
-        name: "",
-        email: "",
-        phone: "",
-        company: "",
-        status: "new",
-      });
+    async function loadCompanies() {
+      try {
+        const data = await getCompanies();
+        setCompanies(data);
+      } catch {
+        console.error("Failed to load companies");
+      }
+    }
+
+    if (isOpen) {
+      loadCompanies();
+      if (lead) {
+        reset({
+          name: lead.name,
+          email: lead.email || "",
+          phone: lead.phone || "",
+          company: lead.company || "",
+          companyId: lead.companyId || null,
+          status: lead.status || "new",
+        });
+      } else {
+        reset({
+          name: "",
+          email: "",
+          phone: "",
+          company: "",
+          companyId: null,
+          status: "new",
+        });
+      }
     }
   }, [lead, reset, isOpen]);
 
@@ -60,9 +78,14 @@ export default function LeadModal({ isOpen, onClose, onSuccess, lead }: LeadModa
     setIsLoading(true);
 
     try {
+      const payload = {
+        ...data,
+        companyId: data.companyId ? Number(data.companyId) : null,
+      };
+
       if (lead) {
         // Edit Mode
-        await updateLead(lead.id, data);
+        await updateLead(lead.id, payload);
         
         // If status is changed to 'won', automatically convert to a Customer
         if (data.status === "won" && lead.status !== "won") {
@@ -71,11 +94,12 @@ export default function LeadModal({ isOpen, onClose, onSuccess, lead }: LeadModa
             email: data.email,
             phone: data.phone,
             company: data.company,
+            companyId: payload.companyId,
           });
         }
       } else {
         // Create Mode
-        await createLead(data);
+        await createLead(payload);
         
         // If created directly as 'won', convert to Customer
         if (data.status === "won") {
@@ -84,6 +108,7 @@ export default function LeadModal({ isOpen, onClose, onSuccess, lead }: LeadModa
             email: data.email,
             phone: data.phone,
             company: data.company,
+            companyId: payload.companyId,
           });
         }
       }
@@ -152,12 +177,28 @@ export default function LeadModal({ isOpen, onClose, onSuccess, lead }: LeadModa
 
           <Input
             label="Phone Number"
-            placeholder="+1 (555) 000-0000"
+            placeholder="+62 999-9999-9999"
             {...register("phone")}
           />
 
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="lead-company" className="text-xs font-medium text-zinc-400">
+              Associate with Company
+            </label>
+            <select
+              id="lead-company"
+              className="w-full px-4 py-2.5 text-sm bg-white/3 border border-white/10 focus:border-[#6366F1] rounded-xl text-white outline-none"
+              {...register("companyId")}
+            >
+              <option value="" className="bg-[#18181B]">-- None --</option>
+              {companies.map((c) => (
+                <option key={c.id} value={c.id} className="bg-[#18181B]">{c.name}</option>
+              ))}
+            </select>
+          </div>
+
           <Input
-            label="Company"
+            label="Company Name (Text fallback)"
             placeholder="Acme Corporation"
             {...register("company")}
           />

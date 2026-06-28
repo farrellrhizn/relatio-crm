@@ -6,6 +6,8 @@ export interface Customer {
   email: string | null;
   phone: string | null;
   company: string | null;
+  companyId: number | null;
+  companyRelation?: { name: string } | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -15,10 +17,23 @@ export interface CustomerInput {
   email?: string | null;
   phone?: string | null;
   company?: string | null;
+  companyId?: number | null;
 }
 
-export async function getCustomers(): Promise<Customer[]> {
-  const response = await api.get("/customers");
+export interface CustomersResponse {
+  data: Customer[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export async function getCustomers(params?: {
+  page?: number;
+  limit?: number;
+  search?: string;
+}): Promise<CustomersResponse> {
+  const response = await api.get("/customers", { params });
   return response.data;
 }
 

@@ -5,6 +5,8 @@ import Button from "../ui/Button";
 import Input from "../ui/Input";
 import { createCustomer, updateCustomer } from "../../services/customerService";
 import type { Customer, CustomerInput } from "../../services/customerService";
+import { getCompanies } from "../../services/companyService";
+import type { Company } from "../../services/companyService";
 
 interface CustomerModalProps {
   isOpen: boolean;
@@ -16,6 +18,7 @@ interface CustomerModalProps {
 export default function CustomerModal({ isOpen, onClose, onSuccess, customer }: CustomerModalProps) {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [companies, setCompanies] = useState<Company[]>([]);
 
   const {
     register,
@@ -28,24 +31,39 @@ export default function CustomerModal({ isOpen, onClose, onSuccess, customer }: 
       email: "",
       phone: "",
       company: "",
+      companyId: null,
     },
   });
 
   useEffect(() => {
-    if (customer) {
-      reset({
-        name: customer.name,
-        email: customer.email || "",
-        phone: customer.phone || "",
-        company: customer.company || "",
-      });
-    } else {
-      reset({
-        name: "",
-        email: "",
-        phone: "",
-        company: "",
-      });
+    async function loadCompanies() {
+      try {
+        const data = await getCompanies();
+        setCompanies(data);
+      } catch {
+        console.error("Failed to load companies");
+      }
+    }
+
+    if (isOpen) {
+      loadCompanies();
+      if (customer) {
+        reset({
+          name: customer.name,
+          email: customer.email || "",
+          phone: customer.phone || "",
+          company: customer.company || "",
+          companyId: customer.companyId || null,
+        });
+      } else {
+        reset({
+          name: "",
+          email: "",
+          phone: "",
+          company: "",
+          companyId: null,
+        });
+      }
     }
   }, [customer, reset, isOpen]);
 
@@ -56,12 +74,17 @@ export default function CustomerModal({ isOpen, onClose, onSuccess, customer }: 
     setIsLoading(true);
 
     try {
+      const payload = {
+        ...data,
+        companyId: data.companyId ? Number(data.companyId) : null,
+      };
+
       if (customer) {
         // Edit Mode
-        await updateCustomer(customer.id, data);
+        await updateCustomer(customer.id, payload);
       } else {
         // Create Mode
-        await createCustomer(data);
+        await createCustomer(payload);
       }
 
       onSuccess();
@@ -128,12 +151,28 @@ export default function CustomerModal({ isOpen, onClose, onSuccess, customer }: 
 
           <Input
             label="Phone Number"
-            placeholder="+1 (555) 111-2222"
+            placeholder="+62 999-9999-9999"
             {...register("phone")}
           />
 
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="customer-company" className="text-xs font-medium text-zinc-400">
+              Associate with Company
+            </label>
+            <select
+              id="customer-company"
+              className="w-full px-4 py-2.5 text-sm bg-white/3 border border-white/10 focus:border-[#6366F1] rounded-xl text-white outline-none"
+              {...register("companyId")}
+            >
+              <option value="" className="bg-[#18181B]">-- None --</option>
+              {companies.map((c) => (
+                <option key={c.id} value={c.id} className="bg-[#18181B]">{c.name}</option>
+              ))}
+            </select>
+          </div>
+
           <Input
-            label="Company"
+            label="Company Name (Text fallback)"
             placeholder="Initech Solutions"
             {...register("company")}
           />

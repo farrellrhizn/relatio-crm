@@ -6,6 +6,8 @@ export interface Lead {
   email: string | null;
   phone: string | null;
   company: string | null;
+  companyId: number | null;
+  companyRelation?: { name: string } | null;
   status: string;
   createdAt: string;
   updatedAt: string;
@@ -16,11 +18,25 @@ export interface LeadInput {
   email?: string | null;
   phone?: string | null;
   company?: string | null;
+  companyId?: number | null;
   status?: string;
 }
 
-export async function getLeads(): Promise<Lead[]> {
-  const response = await api.get("/leads");
+export interface LeadsResponse {
+  data: Lead[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export async function getLeads(params?: {
+  page?: number;
+  limit?: number;
+  search?: string;
+  status?: string;
+}): Promise<LeadsResponse> {
+  const response = await api.get("/leads", { params });
   return response.data;
 }
 

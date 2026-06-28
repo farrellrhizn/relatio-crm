@@ -8,8 +8,9 @@ import type { Customer } from "../../services/customerService";
 
 export default function CustomersPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
-  const [filteredCustomers, setFilteredCustomers] = useState<Customer[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -21,9 +22,13 @@ export default function CustomersPage() {
     setIsLoading(true);
     setError("");
     try {
-      const data = await getCustomers();
-      setCustomers(data);
-      setFilteredCustomers(data);
+      const response = await getCustomers({
+        page,
+        limit: 10,
+        search: searchTerm || undefined,
+      });
+      setCustomers(response.data);
+      setTotalPages(response.totalPages);
     } catch {
       setError("Failed to fetch customers. Please check your backend connection.");
     } finally {
@@ -33,18 +38,17 @@ export default function CustomersPage() {
 
   useEffect(() => {
     fetchCustomers();
-  }, []);
+  }, [page]);
 
-  // Handle local searching
+  // Handle server-side search with a slight delay
   useEffect(() => {
-    const term = searchTerm.toLowerCase();
-    const results = customers.filter(
-      (customer) =>
-        customer.name.toLowerCase().includes(term) ||
-        (customer.company && customer.company.toLowerCase().includes(term))
-    );
-    setFilteredCustomers(results);
-  }, [searchTerm, customers]);
+    const delayDebounceFn = setTimeout(() => {
+      setPage(1);
+      fetchCustomers();
+    }, 400);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchTerm]);
 
   const handleOpenAddModal = () => {
     setSelectedCustomer(null);
@@ -112,7 +116,7 @@ export default function CustomersPage() {
             Retry
           </Button>
         </Card>
-      ) : filteredCustomers.length === 0 ? (
+      ) : customers.length === 0 ? (
         <Card className="flex flex-col items-center justify-center p-12 text-center">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/5 text-zinc-400 mb-4">
             <UserCheck className="h-6 w-6" />
@@ -130,69 +134,96 @@ export default function CustomersPage() {
           )}
         </Card>
       ) : (
-        <Card className="overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse text-left">
-              <thead>
-                <tr className="border-b border-white/5 bg-white/1 text-xs font-semibold uppercase tracking-wider text-zinc-400">
-                  <th className="px-6 py-4">Name</th>
-                  <th className="px-6 py-4">Company</th>
-                  <th className="px-6 py-4">Contact Info</th>
-                  <th className="px-6 py-4">Added Date</th>
-                  <th className="px-6 py-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5 text-sm text-zinc-300">
-                {filteredCustomers.map((customer) => (
-                  <tr
-                    key={customer.id}
-                    className="group hover:bg-white/1 transition-all duration-150"
-                  >
-                    <td className="px-6 py-4">
-                      <div className="font-semibold text-white">{customer.name}</div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-zinc-400 font-medium">
-                        {customer.company || "—"}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 space-y-0.5">
-                      <div className="text-zinc-300">{customer.email || "—"}</div>
-                      <div className="text-xs text-zinc-500">{customer.phone || ""}</div>
-                    </td>
-                    <td className="px-6 py-4 text-zinc-400">
-                      {new Date(customer.createdAt).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex justify-end gap-2 opacity-80 group-hover:opacity-100 transition-opacity">
-                        <button
-                          title="Edit Customer"
-                          type="button"
-                          className="rounded-lg p-1.5 text-zinc-400 hover:bg-white/5 hover:text-white"
-                          onClick={() => handleOpenEditModal(customer)}
-                        >
-                          <Edit2 className="h-4 w-4" />
-                        </button>
-                        <button
-                          title="Delete Customer"
-                          type="button"
-                          className="rounded-lg p-1.5 text-zinc-400 hover:bg-rose-500/10 hover:text-rose-400"
-                          onClick={() => handleDelete(customer.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </td>
+        <div className="space-y-4">
+          <Card className="overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse text-left">
+                <thead>
+                  <tr className="border-b border-white/5 bg-white/1 text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                    <th className="px-6 py-4">Name</th>
+                    <th className="px-6 py-4">Company</th>
+                    <th className="px-6 py-4">Contact Info</th>
+                    <th className="px-6 py-4">Added Date</th>
+                    <th className="px-6 py-4 text-right">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Card>
+                </thead>
+                <tbody className="divide-y divide-white/5 text-sm text-zinc-300">
+                  {customers.map((customer) => (
+                    <tr
+                      key={customer.id}
+                      className="group hover:bg-white/1 transition-all duration-150"
+                    >
+                      <td className="px-6 py-4">
+                        <div className="font-semibold text-white">{customer.name}</div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="text-zinc-400 font-medium">
+                          {customer.companyRelation?.name || customer.company || "—"}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 space-y-0.5">
+                        <div className="text-zinc-300">{customer.email || "—"}</div>
+                        <div className="text-xs text-zinc-500">{customer.phone || ""}</div>
+                      </td>
+                      <td className="px-6 py-4 text-zinc-400">
+                        {new Date(customer.createdAt).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex justify-end gap-2 opacity-80 group-hover:opacity-100 transition-opacity">
+                          <button
+                            title="Edit Customer"
+                            type="button"
+                            className="rounded-lg p-1.5 text-zinc-400 hover:bg-white/5 hover:text-white"
+                            onClick={() => handleOpenEditModal(customer)}
+                          >
+                            <Edit2 className="h-4 w-4" />
+                          </button>
+                          <button
+                            title="Delete Customer"
+                            type="button"
+                            className="rounded-lg p-1.5 text-zinc-400 hover:bg-rose-500/10 hover:text-rose-400"
+                            onClick={() => handleDelete(customer.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between mt-4">
+              <span className="text-xs text-zinc-500">
+                Page {page} of {totalPages}
+              </span>
+              <div className="flex gap-2">
+                <Button
+                  variant="ghost"
+                  onClick={() => setPage((p) => Math.max(p - 1, 1))}
+                  disabled={page === 1}
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+                  disabled={page === totalPages}
+                >
+                  Next
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
       )}
 
       {/* Modal form */}

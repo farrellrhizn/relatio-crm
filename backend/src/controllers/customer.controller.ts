@@ -44,7 +44,13 @@ export const getCustomersController = async (
       return;
     }
 
-    const customers = await getCustomersService(req.user.userId);
+    const { page, limit, search } = req.query;
+
+    const customers = await getCustomersService(req.user.userId, {
+      ...(page && { page: Number(page) }),
+      ...(limit && { limit: Number(limit) }),
+      ...(search && { search: String(search) }),
+    });
 
     res.status(200).json(customers);
   } catch (error) {

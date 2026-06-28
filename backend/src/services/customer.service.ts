@@ -11,6 +11,7 @@ type CustomerInput = {
   email?: string | null;
   phone?: string | null;
   company?: string | null;
+  companyId?: number | null;
 };
 
 const cleanCustomerInput = (data: Partial<CustomerInput>) => {
@@ -19,6 +20,7 @@ const cleanCustomerInput = (data: Partial<CustomerInput>) => {
     ...(data.email !== undefined && { email: data.email }),
     ...(data.phone !== undefined && { phone: data.phone }),
     ...(data.company !== undefined && { company: data.company }),
+    ...(data.companyId !== undefined && { companyId: data.companyId }),
   };
 };
 
@@ -36,15 +38,43 @@ export const createCustomerService = async (
     throw new Error("Name is required");
   }
 
+  const cleaned = cleanCustomerInput(data);
+
   return createCustomer({
     name: data.name,
     userId,
-    ...cleanCustomerInput(data),
+    email: cleaned.email ?? null,
+    phone: cleaned.phone ?? null,
+    company: cleaned.company ?? null,
+    companyId: cleaned.companyId ?? null,
   });
 };
 
-export const getCustomersService = async (userId: number) => {
-  return findAllCustomers(userId);
+export const getCustomersService = async (
+  userId: number,
+  params: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  } = {}
+) => {
+  const page = params.page && params.page > 0 ? params.page : 1;
+  const limit = params.limit && params.limit > 0 ? params.limit : 10;
+  const skip = (page - 1) * limit;
+
+  const { data, total } = await findAllCustomers(userId, {
+    skip,
+    take: limit,
+    ...(params.search && { search: params.search }),
+  });
+
+  return {
+    data,
+    total,
+    page,
+    limit,
+    totalPages: Math.ceil(total / limit),
+  };
 };
 
 export const getCustomerByIdService = async (
@@ -70,7 +100,15 @@ export const updateCustomerService = async (
   validateCustomerId(id);
   await getCustomerByIdService(userId, id);
 
-  return updateCustomerById(id, cleanCustomerInput(data));
+  const cleaned = cleanCustomerInput(data);
+  const updateData: any = {};
+  if (cleaned.name !== undefined) updateData.name = cleaned.name;
+  if (cleaned.email !== undefined) updateData.email = cleaned.email ?? null;
+  if (cleaned.phone !== undefined) updateData.phone = cleaned.phone ?? null;
+  if (cleaned.company !== undefined) updateData.company = cleaned.company ?? null;
+  if (cleaned.companyId !== undefined) updateData.companyId = cleaned.companyId ?? null;
+
+  return updateCustomerById(id, updateData);
 };
 
 export const deleteCustomerService = async (

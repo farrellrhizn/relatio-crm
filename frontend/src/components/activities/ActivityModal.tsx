@@ -47,8 +47,8 @@ export default function ActivityModal({ isOpen, onClose, onSuccess }: ActivityMo
     async function loadRelations() {
       try {
         const [leadsData, customersData] = await Promise.all([getLeads(), getCustomers()]);
-        setLeads(leadsData);
-        setCustomers(customersData);
+        setLeads(leadsData.data);
+        setCustomers(customersData.data);
       } catch {
         console.error("Failed to load relation options");
       }

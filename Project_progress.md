@@ -352,35 +352,76 @@ Features:
 
 ---
 
+## Sprint 11 - Companies, Tasks, & Opportunities (New Core Modules)
+
+### Database Integration
+* [x] Model Company, Task, and Opportunity in Prisma Schema
+* [x] Database migration & generation client
+
+### Backend APIs & Validations
+* [x] Zod validation middleware & schemas
+* [x] Global express error handling middleware
+* [x] CRUD endpoint & service for Companies
+* [x] CRUD endpoint & service for Tasks
+* [x] CRUD endpoint & service for Opportunities
+* [x] Automatic Won Stage Converter (Opportunity stage won updates Lead to won and creates a new Customer)
+* [x] Update Dashboard metrics calculation (Won Revenue, Pipeline Value, Active Deals)
+
+### Frontend Interfaces
+* [x] Setup API services for Company, Task, and Opportunity
+* [x] Navigation update in Sidebar layout
+* [x] Companies management view & modal CRUD form
+* [x] Tasks list view & checklist logic
+* [x] Opportunities Kanban Pipeline Board view & stage move logic
+* [x] Integrate new financial KPIs on Bento Dashboard page
+
+---
+
+## Sprint 12 - Proposals, Pagination, & Advanced Filtering
+
+### Database & Backend
+* [x] Model Proposal in Prisma Schema & migrations
+* [x] CRUD endpoint & service for Proposals
+* [x] Server-side pagination, search, and filtering for Leads
+* [x] Server-side pagination, search for Customers
+
+### Frontend Integration
+* [x] Setup API service for Proposal
+* [x] Navigation update for Proposals in Sidebar layout
+* [x] Proposals view page & CRUD form modal
+* [x] Implement backend-driven pagination & filtering UI for Leads & Customers list
+
+---
+
 # Future Improvements
 
 ## Backend Ecosystem (API for New UI)
 
-* [ ] Zod Validation & Global Error Handler
+* [x] Zod Validation & Global Error Handler
 * [ ] Logger & Refresh Token
 * [ ] Role Permission (Team Management)
-* [ ] Pagination, Filtering, Search
-* [ ] Opportunities & Pipeline Module
-* [ ] Companies Module
-* [ ] Proposals Module
-* [ ] Tasks Management
+* [x] Pagination, Filtering, Search
+* [x] Opportunities & Pipeline Module
+* [x] Companies Module
+* [x] Proposals Module
+* [x] Tasks Management
 
 ---
 
 ## Frontend Architecture
 
-* [ ] Custom hook / state management setup
-* [ ] Zustand (State Management)
-* [ ] Dark Mode Implementation (Primary Theme)
-* [ ] Recharts (Revenue & Pipeline Analytics)
-* [ ] TanStack Table (Data Grids)
-* [ ] Lucide React (Icons)
+* [x] Custom hook / state management setup
+* [x] Zustand (State Management)
+* [x] Dark Mode Implementation (Primary Theme)
+* [x] Recharts (Revenue & Pipeline Analytics)
+* [x] TanStack Table (Data Grids)
+* [x] Lucide React (Icons)
 
 ---
 
 # Current Completion
 
-Backend Foundation : 65%
+Backend Foundation : 98%
 
 Authentication : 100%
 
@@ -388,13 +429,13 @@ CRM Features : 100%
 
 Frontend : 100%
 
-Overall Project : 95%
+Overall Project : 99%
 
 ---
 
 Last Updated:
 
-2026-06-27
+2026-06-28
 
 
 
